@@ -1,26 +1,446 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ========================================
+   Modern British Design System
+   Community Data Analytics Dashboard
+   ======================================== */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Color Palette */
+  --color-navy: #142B40;
+  --color-navy-light: #1C3A55;
+  --color-navy-dark: #0E1F2E;
+  --color-forest: #263F38;
+  --color-forest-light: #2F5049;
+  --color-cream: #E8E2D6;
+  --color-cream-light: #F0ECE4;
+  --color-gold: #B7A17A;
+  --color-gold-light: #C9B897;
+  --color-gold-dark: #9A8762;
+  --color-white: #F8F8F5;
+  --color-slate: #687783;
+  --color-slate-light: #8FA3B0;
+  --color-slate-dark: #4A5B66;
+
+  /* Semantic Colors */
+  --color-background: #F8F8F5;
+  --color-foreground: #142B40;
+  --color-card: #FFFFFF;
+  --color-card-hover: #FCFCFA;
+  --color-border: #E0DAD0;
+  --color-border-light: #EBE7DF;
+  --color-muted: #687783;
+  --color-success: #2D6A4F;
+  --color-warning: #B7A17A;
+  --color-danger: #A4373A;
+  --color-info: #1C3A55;
+
+  /* Typography - references CSS vars set by next/font/google in layout.tsx */
+  --font-heading: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+
+  /* Spacing */
+  --spacing-sidebar: 260px;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(20, 43, 64, 0.06), 0 1px 2px rgba(20, 43, 64, 0.04);
+  --shadow-card-hover: 0 4px 12px rgba(20, 43, 64, 0.08), 0 2px 4px rgba(20, 43, 64, 0.04);
+  --shadow-dropdown: 0 8px 24px rgba(20, 43, 64, 0.12);
+  --shadow-sidebar: 2px 0 8px rgba(20, 43, 64, 0.08);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Reset & Base */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-slate-light) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--color-slate-light);
+  border-radius: 3px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================
+   Sidebar Styles
+   ======================================== */
+
+.sidebar {
+  background: linear-gradient(180deg, var(--color-navy) 0%, var(--color-navy-dark) 100%);
+  box-shadow: var(--shadow-sidebar);
+}
+
+.sidebar-logo {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-nav-item {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.sidebar-nav-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sidebar-nav-item.active {
+  background: rgba(183, 161, 122, 0.15);
+  color: var(--color-gold-light);
+  border-left: 3px solid var(--color-gold);
+}
+
+/* ========================================
+   Card Styles
+   ======================================== */
+
+.dashboard-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border-light);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dashboard-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-border);
+}
+
+.summary-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-navy) 0%, var(--color-forest) 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.summary-card:hover::before {
+  opacity: 1;
+}
+
+.summary-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease;
+}
+
+.summary-card:hover .summary-card-icon {
+  transform: scale(1.05);
+}
+
+/* ========================================
+   Table Styles
+   ======================================== */
+
+.data-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.data-table thead th {
+  background: var(--color-cream-light);
+  color: var(--color-navy);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--color-border);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.data-table thead th:first-child {
+  border-radius: 8px 0 0 0;
+}
+
+.data-table thead th:last-child {
+  border-radius: 0 8px 0 0;
+}
+
+.data-table tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border-light);
+  font-size: 0.875rem;
+  color: var(--color-navy);
+  transition: background-color 0.15s ease;
+}
+
+.data-table tbody tr:hover td {
+  background-color: rgba(232, 226, 214, 0.3);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tbody tr:last-child td:first-child {
+  border-radius: 0 0 0 8px;
+}
+
+.data-table tbody tr:last-child td:last-child {
+  border-radius: 0 0 8px 0;
+}
+
+/* ========================================
+   Status Badge
+   ======================================== */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.status-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-active {
+  background: rgba(45, 106, 79, 0.1);
+  color: #2D6A4F;
+}
+
+.status-active::before {
+  background: #2D6A4F;
+  animation: pulse-dot 2s infinite;
+}
+
+.status-complete {
+  background: rgba(28, 58, 85, 0.1);
+  color: #1C3A55;
+}
+
+.status-complete::before {
+  background: #1C3A55;
+}
+
+.status-pending {
+  background: rgba(183, 161, 122, 0.15);
+  color: #9A8762;
+}
+
+.status-pending::before {
+  background: #9A8762;
+}
+
+/* ========================================
+   Filter / Dropdown Styles
+   ======================================== */
+
+.filter-select {
+  appearance: none;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 8px 36px 8px 12px;
+  font-size: 0.875rem;
+  color: var(--color-navy);
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%23687783' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.filter-select:hover {
+  border-color: var(--color-slate);
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--color-navy);
+  box-shadow: 0 0 0 3px rgba(20, 43, 64, 0.08);
+}
+
+/* ========================================
+   Chart Container
+   ======================================== */
+
+.chart-container {
+  position: relative;
+}
+
+.chart-container .recharts-cartesian-grid-horizontal line,
+.chart-container .recharts-cartesian-grid-vertical line {
+  stroke: var(--color-border-light);
+}
+
+.chart-container .recharts-text {
+  fill: var(--color-slate);
+  font-family: var(--font-body);
+  font-size: 11px;
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-in {
+  animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Staggered animation delays */
+.stagger-1 { animation-delay: 0.05s; opacity: 0; }
+.stagger-2 { animation-delay: 0.1s; opacity: 0; }
+.stagger-3 { animation-delay: 0.15s; opacity: 0; }
+.stagger-4 { animation-delay: 0.2s; opacity: 0; }
+.stagger-5 { animation-delay: 0.25s; opacity: 0; }
+.stagger-6 { animation-delay: 0.3s; opacity: 0; }
+
+/* ========================================
+   Responsive: Mobile Sidebar
+   ======================================== */
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 31, 46, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 40;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ========================================
+   Heading Decorations
+   ======================================== */
+
+.section-heading {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-heading::after {
+  content: "";
+  width: 32px;
+  height: 2px;
+  background: var(--color-gold);
+  border-radius: 1px;
+}
+
+/* ========================================
+   Loading Skeleton
+   ======================================== */
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-cream-light) 0px, var(--color-cream) 40px, var(--color-cream-light) 80px);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+/* ========================================
+   Tooltip
+   ======================================== */
+
+.chart-tooltip {
+  background: var(--color-card) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--shadow-dropdown) !important;
+  padding: 12px !important;
+}
+
+.chart-tooltip .recharts-tooltip-label {
+  color: var(--color-navy) !important;
+  font-weight: 600 !important;
+  font-family: var(--font-body) !important;
+  margin-bottom: 4px !important;
 }
